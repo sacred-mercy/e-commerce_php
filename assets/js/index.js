@@ -54,9 +54,10 @@ function showDialog(button) {
 }
 
 function showModal(id) {
-    console.log(id);
+    console.log("id: " + id);
+    console.log(productsData);
     for (let product of productsData) {
-        if (product.id === id) {
+        if (product.id == id) {
             console.log(product);
             let dialog = document.getElementById("dialog");
             dialog.querySelector("#productImageDialog").src = product.thumbnail;
@@ -72,4 +73,11 @@ function showModal(id) {
             break;
         }
     }
+}
+
+function addToCart(button) {
+    let card = button.closest(".card");
+    let id = card.id;
+    let product = productsData.find((product) => product.id == id);
+    console.log(product);
 }

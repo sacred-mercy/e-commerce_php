@@ -15,8 +15,8 @@
                     </h5>
                 </div>
                 <div class="flex justify-between mt-1">
-                    <!-- Add to cart btn -->
                     <button
+                        onclick="addToCart(this)"
                         class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-2.5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
                         Add to Cart
                     </button>
@@ -67,6 +67,6 @@
         </div>
     </section>
 </dialog>
-<script src="./public/js/index.js"></script>
+<script src="assets/js/index.js"></script>
 
 <?php require_once 'include/footer.php'; ?>
