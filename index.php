@@ -1,4 +1,4 @@
-<?php require_once 'views/partials/header.php'; ?>
+<?php require_once 'include/header.php'; ?>
 
 <div class="flex justify-center">
     <div id="productsContainer"
@@ -69,4 +69,4 @@
 </dialog>
 <script src="./public/js/index.js"></script>
 
-<?php require_once 'views/partials/footer.php'; ?>
+<?php require_once 'include/footer.php'; ?>

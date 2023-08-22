@@ -1,12 +1,13 @@
+<?php require_once 'include/header.php'; ?>
 <?php
-require_once '../controllers/userController.php';
 
+require_once 'controllers/userController.php';
 $errMsz = '';
 $email = '';
 $password = '';
 
 if (isset($_SESSION['user'])) {
-    header('Location: /'); // redirect to home page
+    header('Location: index.php'); // redirect to home page
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -14,18 +15,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'];
     $userController = new UserController();
     $user = $userController->validateUser($email, $password);
-    if ($user) {
-        echo print_r($user);
-        $_SESSION['user'] = $user[0];
+    if (gettype($user) !== 'string') {
+        $_SESSION['user'] = $user;
         header('Location: index.php');
+        exit();
     } else {
-        $errMsz = 'Invalid email or password';
+        $errMsz = $user;
     }
 }
 
 ?>
 
-<?php require_once 'partials/header.php'; ?>
 
 <div class="constainer flex justify-center items-center h-screen">
     <div>
@@ -63,4 +63,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 </div>
 
-<?php require_once 'partials/footer.php'; ?>
+<?php require_once 'include/footer.php'; ?>
