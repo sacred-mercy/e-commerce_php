@@ -1,6 +1,6 @@
 <?php
 
-require_once '../models/cartModel.php';
+require_once dirname(__DIR__) . '/models/cartModel.php';
 
 class CartController{
     function getCartItems($id){
