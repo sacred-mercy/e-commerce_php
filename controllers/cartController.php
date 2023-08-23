@@ -14,4 +14,10 @@ class CartController{
         $cartItems = $cartModel->addToCart($productId, $userId);
         return $cartItems;
     }
+
+    function deleteCartItem($productId, $userId){
+        $cartModel = new CartModel();
+        $cartItems = $cartModel->deleteCartItem($productId, $userId);
+        return $cartItems;
+    }
 }

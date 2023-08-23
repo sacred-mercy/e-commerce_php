@@ -29,5 +29,10 @@ class CartModel{
         $result = pg_query($GLOBALS['db'], "INSERT INTO cart (product_id, user_id, quantity) VALUES ($productId, $userId, 1)");
         return pg_fetch_all($result);
     }
+
+    function deleteCartItem($productId, $userId){
+        $result = pg_query($GLOBALS['db'], "DELETE FROM cart WHERE product_id = $productId AND user_id = $userId");
+        return pg_fetch_all($result);
+    }
 }
 ?>

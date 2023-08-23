@@ -25,7 +25,7 @@ function showDialog(button) {
     for (let product of productObject) {
         if (product.id == id) {
             let dialog = document.getElementById("dialog");
-            dialog.querySelector("#productImageDialog").src =product.thumbnail;
+            dialog.querySelector("#productImageDialog").src = product.thumbnail;
             dialog.querySelector("#productNameDialog").innerText =
                 product.title;
             dialog.querySelector("#productBrandDialog").innerText =
@@ -50,6 +50,13 @@ function loadCartItems(cartItems) {
         productCard.querySelector("#productQty").innerText = item.quantity;
         productCard.classList.remove("hidden");
         productsContainer.appendChild(productCard);
+
+        // add price to total
+        let price = parseInt(item.price);
+        let qty = parseInt(item.quantity);
+        let final = parseInt(document.getElementById("totalPrice").innerText);
+        final += price * qty;
+        document.getElementById("totalPrice").innerText = final;
     }
 }
 
@@ -90,22 +97,31 @@ function changeQty(button, isIncrease) {
 function deleteProduct(button) {
     let productCard = button.parentElement.parentElement.parentElement;
     let id = productCard.id;
+
     let xhr = new XMLHttpRequest();
-    xhr.open("POST", "/cart/deleteCartItem", true);
-    xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.send(
-        JSON.stringify({
-            id: id,
-        })
-    );
+    xhr.open("POST", "routes/cartRoutes.php?request=deleteCartItem&id=" + id, true);
+    xhr.send();
     xhr.onload = () => {
         if (xhr.status === 200) {
 
             productCard.remove();
 
+            // update total price
+            for (let product of productObject) {
+                if (product.id == id) {
+                    console.log(product);
+                    let price = parseInt(product.price);
+                    let qty = parseInt(product.quantity);
+                    let final = parseInt(document.getElementById("totalPrice").innerText);
+                    final -= price * qty;
+                    document.getElementById("totalPrice").innerText = final;
+                    break;
+                }
+            }
+
             // delete from productObject
             for (let i = 0; i < productObject.length; i++) {
-                if (productObject[i].id === parseInt(id)) {
+                if (productObject[i].id == id) {
                     productObject.splice(i, 1);
                     break;
                 }

@@ -12,13 +12,21 @@ function getCart()
 
 function addToCart()
 {
-    $productId = $_GET['productId'];
     if (!isset($_SESSION['user'])) {
-        return "notLoggedIn";
+        echo "notLoggedIn";
+        exit();
     }
+    $productId = $_GET['productId'];
     $userId = $_SESSION['user']['id'];
     $cartItems = $GLOBALS['cartController']->addToCart($productId, $userId);
     echo json_encode($cartItems);
+}
+
+function deleteCartItem()
+{
+    $productId = $_GET['id'];
+    $userId = $_SESSION['user']['id'];
+    return $GLOBALS['cartController']->deleteCartItem($productId, $userId);
 }
 
 
@@ -30,6 +38,9 @@ switch ($request) {
         break;
     case 'addProduct':
         addToCart();
+        break;
+    case 'deleteCartItem':
+        deleteCartItem();
         break;
     default:
         # code...
