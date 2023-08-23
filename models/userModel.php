@@ -11,34 +11,29 @@ class UserModel
         $value = htmlspecialchars($value);
         return $value;
     }
-    function getAllUsers()
-    {
-        $users = pg_query($GLOBALS['db'], "SELECT * FROM users");
-        return pg_fetch_all($users);
-    }
-
-    function getUserById($id)
-    {
-        $id = $this->getSafeValue($id);
-        $user = pg_query($GLOBALS['db'], "SELECT * FROM users WHERE id = $id");
-        return pg_fetch_all($user);
-    }
-
-    function getUserByEmail($email)
-    {
-        $email = $this->getSafeValue($email);
-        $user = pg_query($GLOBALS['db'], "SELECT * FROM users WHERE email = '$email'");
-        return pg_fetch_all($user);
-    }
 
     function checkUserExists($email)
     {
         $email = $this->getSafeValue($email);
-        $user = pg_query($GLOBALS['db'], "SELECT * FROM users WHERE email = '$email'");
-        if (pg_num_rows($user) > 0) {
-            return true;
-        } else {
-            return false;
+        try {
+            $user = pg_query($GLOBALS['db'], "SELECT * FROM users WHERE email = '$email'");
+            $user = pg_fetch_all($user);
+            if (count($user) > 0) {
+                return array(
+                    'exists' => true,
+                    'statusCode' => '200'
+                );
+            } else {
+                return array(
+                    'exists' => false,
+                    'statusCode' => '200'
+                );
+            }
+        } catch (Exception $e) {
+            return array(
+                'error' => $e->getMessage(),
+                'statusCode' => '400'
+            );
         }
     }
 
@@ -65,29 +60,26 @@ class UserModel
         // expiry date set to 5 minutes from now
         $email_verification_expiry = date('Y-m-d H:i:s', strtotime('+5 minutes'));
 
-        $user = pg_query($GLOBALS['db'], "INSERT INTO users (email, password, name, email_verification_hash, email_verification_expiry) VALUES ('$email', '$password', '$name', '$email_verification_hash', '$email_verification_expiry')");
-        pg_fetch_all($user);
-        return array(
-            'email_verification_hash' => $email_verification_hash,
-            'statusCode' => '201'
-        );
-    }
-
-    function updateUser($id, $email, $password, $name)
-    {
-        $id = $this->getSafeValue($id);
-        $email = $this->getSafeValue($email);
-        $password = $this->getSafeValue($password);
-        $name = $this->getSafeValue($name);
-        $user = pg_query($GLOBALS['db'], "UPDATE users SET email = '$email', password = '$password', name = '$name' WHERE id = $id");
-        return pg_fetch_all($user);
-    }
-
-    function deleteUser($id)
-    {
-        $id = $this->getSafeValue($id);
-        $user = pg_query($GLOBALS['db'], "DELETE FROM users WHERE id = $id");
-        return pg_fetch_all($user);
+        try {
+            $user = pg_query($GLOBALS['db'], "INSERT INTO users (name, email, password, email_verification_hash, email_verification_expiry) VALUES ('$name', '$email', '$password', '$email_verification_hash', '$email_verification_expiry')");
+            if ($user) {
+                return array(
+                    'message' => 'User created successfully',
+                    'email_verification_hash' => $email_verification_hash,
+                    'statusCode' => '201'
+                );
+            } else {
+                return array(
+                    'error' => 'Something went wrong',
+                    'statusCode' => '400'
+                );
+            }
+        } catch (Exception $e) {
+            return array(
+                'error' => $e->getMessage(),
+                'statusCode' => '400'
+            );
+        }
     }
 
     function validateUser($email, $password)
@@ -98,6 +90,11 @@ class UserModel
         // checking if values are empty
         if (empty($email) || empty($password)) {
             return "Please fill in all fields";
+        }
+
+        // checking if email is valid
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return "Invalid email";
         }
 
         // check if user exists

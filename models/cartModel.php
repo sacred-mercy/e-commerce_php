@@ -2,22 +2,32 @@
 
 require_once dirname(__DIR__) . '/config/db.php';
 
-class CartModel{
-    function getCartItems($id){
-        $products = pg_query($GLOBALS['db'], "SELECT * FROM cart WHERE user_id = $id");
-        $products = pg_fetch_all($products);
-        $cartItems = [];
-        foreach ($products as $product) {
-            $productId = $product['product_id'];
-            $productDetails = pg_query($GLOBALS['db'], "SELECT * FROM products WHERE id = $productId");
-            $productDetails = pg_fetch_all($productDetails);
-            $productDetails[0]['quantity'] = $product['quantity'];
-            array_push($cartItems, $productDetails[0]);
+class CartModel
+{
+    function getCartItems($id)
+    {
+        $query = "SELECT p.*, c.quantity FROM cart c
+                  JOIN products p ON c.product_id = p.id
+                  WHERE c.user_id = $id";
+
+        $result = pg_query($GLOBALS['db'], $query);
+
+        if ($result === false) {
+            return array(
+                'error' => "Query execution failed: " . pg_last_error($GLOBALS['db']),
+                'statusCode' => '400'
+            );
         }
-        return $cartItems;
+
+        return array(
+            'cartItems' => pg_fetch_all($result),
+            'statusCode' => '200'
+        );
     }
 
-    function addToCart($productId, $userId){
+
+    function addToCart($productId, $userId)
+    {
         // check if product is already in cart
         $result = pg_query($GLOBALS['db'], "SELECT * FROM cart WHERE product_id = $productId AND user_id = $userId");
         $product = pg_fetch_all($result);
@@ -30,7 +40,8 @@ class CartModel{
         return pg_fetch_all($result);
     }
 
-    function deleteCartItem($productId, $userId){
+    function deleteCartItem($productId, $userId)
+    {
         $result = pg_query($GLOBALS['db'], "DELETE FROM cart WHERE product_id = $productId AND user_id = $userId");
         return pg_fetch_all($result);
     }

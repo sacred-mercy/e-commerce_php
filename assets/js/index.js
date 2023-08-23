@@ -11,15 +11,21 @@ xhr.send();
 xhr.onload = () => {
     if (xhr.status === 200) {
         productsData = JSON.parse(xhr.response);
-        loadProducts(productsData.slice(0, 5));
-        if (productsData.length <= 5) {
-            document.getElementById("loadMore").classList.add("hidden");
-        }
-        if (productsData.length === 0) {
-            document.getElementById("productsContainer").innerText =
+        if(productsData.statusCode == 200){
+            productsData = productsData.products;
+            loadProducts(productsData.slice(0, 5));
+            if (productsData.length <= 5) {
+                document.getElementById("loadMore").classList.add("hidden");
+            }
+            if (productsData.length === 0) {
+                document.getElementById("productsContainer").innerText =
                 "No products found";
+            } else {
+                document.getElementById("LoadMoreBtn").classList.remove("hidden");
+            }
         } else {
-            document.getElementById("LoadMoreBtn").classList.remove("hidden");
+            document.getElementById("productsContainer").innerText =
+            "Something went wrong";
         }
     }
 };

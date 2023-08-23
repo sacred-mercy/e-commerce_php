@@ -11,9 +11,17 @@ xhr.send();
 xhr.onload = () => {
     if (xhr.status === 200) {
         cartItems = JSON.parse(xhr.response);
-        loadCartItems(cartItems);
-        if (cartItems.length === 0) {
-            document.getElementById("emptyCart").classList.remove("hidden");
+        if (cartItems.statusCode == 200) {
+            cartItems = cartItems.cartItems;
+            loadCartItems(cartItems);
+            if (cartItems.length === 0) {
+                document.getElementById("emptyCart").classList.remove("hidden");
+            } else {
+                document.getElementById("checkoutBtn").classList.remove("hidden");
+            }
+        } else {
+            document.getElementById("productsContainer").innerText =
+                "Something went wrong";
         }
     }
 };
@@ -129,6 +137,7 @@ function deleteProduct(button) {
 
             if (productObject.length === 0) {
                 document.getElementById("emptyCart").classList.remove("hidden");
+                document.getElementById("checkoutBtn").classList.add("hidden");
             }
         }
     };

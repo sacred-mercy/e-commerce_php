@@ -13,8 +13,18 @@ class UserController {
     function createUser($name, $email, $password) {
         $userModel = new UserModel();
         // check if user exists
-        if ($userModel->checkUserExists($email)) {
-            return array('error' => 'User already exists', 'statusCode' => '400');
+        if ($userModel->checkUserExists($email)['statusCode'] === '200') {
+            if ($userModel->checkUserExists($email)['exists']) {
+                return array(
+                    'error' => 'User already exists',
+                    'statusCode' => '400'
+                );
+            }
+        } else {
+            return array(
+                'error' => $userModel->checkUserExists($email)['error'],
+                'statusCode' => '400'
+            );
         }
         $user = $userModel->createUser($name, $email, $password);
         if ($user['statusCode'] === '201') {
@@ -23,8 +33,8 @@ class UserController {
             // get project url path
             $path = $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']);
             $msg = "Click <a href='http://$path/emailVerify.php?email=$email&token=$token'>here</a> to verify your email";
-            smtp_mailer($email, $subject, $msg);
-        }
+            smtp_mailer($email, $subject, $msg, null, null);
+        } 
         return $user;
     }
 

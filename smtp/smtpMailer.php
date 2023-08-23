@@ -1,6 +1,6 @@
 <?php
 include('smtp/PHPMailerAutoload.php');
-function smtp_mailer($to, $subject, $msg)
+function smtp_mailer($to, $subject, $msg, $file, $filename)
 {
 	require_once 'env.php';
 	$email = $EMAIL;
@@ -13,13 +13,15 @@ function smtp_mailer($to, $subject, $msg)
 	$mail->Port = 587;
 	$mail->IsHTML(true);
 	$mail->CharSet = 'UTF-8';
-	//$mail->SMTPDebug = 2; 
+	// $mail->SMTPDebug = 2; 
 	$mail->Username = $email;
 	$mail->Password = $pass;
 	$mail->SetFrom($email);
 	$mail->Subject = $subject;
 	$mail->Body = $msg;
 	$mail->AddAddress($to);
+	if ($file != null)
+		$mail->AddAttachment($file, $filename);
 	$mail->SMTPOptions = array(
 		'ssl' => array(
 			'verify_peer' => false,

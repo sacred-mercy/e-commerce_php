@@ -14,8 +14,13 @@ $cartController = new CartController();
 $cartItems = $cartController->getCartItems($_SESSION['user']['id']);
 
 $totalPrice = 0;
-foreach ($cartItems as $cartItem) {
-    $totalPrice += $cartItem['price'] * $cartItem['quantity'];
+if ($cartItems['statusCode'] === '200') {
+    $cartItems = $cartItems['cartItems'];
+    foreach ($cartItems as $cartItem) {
+        $totalPrice += $cartItem['price'] * $cartItem['quantity'];
+    }
+} else {
+    $cartItems = array();
 }
 
 ?>
@@ -45,15 +50,16 @@ foreach ($cartItems as $cartItem) {
                         <td class="py-2 px-4 border-r">
                             <?php echo $cartItem['quantity']; ?>
                         </td>
-                        <?php $totalPrice = $cartItem['price'] * $cartItem['quantity']; ?>
+                        <?php $price = $cartItem['price'] * $cartItem['quantity']; ?>
                         <td class="py-2 px-4">₹
-                            <?php echo $totalPrice; ?>
+                            <?php echo $price; ?>
                         </td>
                     </tr>
                 <?php } ?>
             </tbody>
         </table>
         <form method="POST" action="order.php">
+            <input type="hidden" name="totalPrice" value="<?php echo $totalPrice; ?>">
             <div id="paymentMethodSelector">
                 <div class="flex justify-between items-center mt-4 border p-2">
                     <label for="paymentMethod">Payment Method</label>
