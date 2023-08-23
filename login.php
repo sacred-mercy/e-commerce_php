@@ -1,5 +1,4 @@
-<?php require_once 'include/header.php'; ?>
-<?php
+<?php require_once 'include/header.php'; 
 
 require_once 'controllers/userController.php';
 $errMsz = '';

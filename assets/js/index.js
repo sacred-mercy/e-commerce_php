@@ -54,8 +54,6 @@ function showDialog(button) {
 }
 
 function showModal(id) {
-    console.log("id: " + id);
-    console.log(productsData);
     for (let product of productsData) {
         if (product.id == id) {
             console.log(product);
@@ -78,6 +76,19 @@ function showModal(id) {
 function addToCart(button) {
     let card = button.closest(".card");
     let id = card.id;
-    let product = productsData.find((product) => product.id == id);
-    console.log(product);
+    console.log(id);
+    // ajax request to add product to cart
+    let xhr = new XMLHttpRequest();
+    xhr.open("GET", "routes/cartRoutes.php?request=addProduct&productId=" + id, true);
+    xhr.send();
+    xhr.onload = () => {
+        console.log(xhr.response);
+        if (xhr.status === 200) {
+            if (xhr.response === "notLoggedIn") {
+                alert("Please login to add products to cart");
+                return;
+            }
+            alert("Product added to cart successfully");
+        }
+    }
 }

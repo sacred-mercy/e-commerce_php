@@ -11,6 +11,7 @@
                     <?php echo $_SESSION['user']['name']; ?>
                 </span>
             </p>
+            <a href="cart.php" class="text-white bg-blue-600 border rounded p-1 hover:text-gray-200 mx-2">Cart</a>
             <a href="logout.php" class="text-white bg-red-600 border rounded p-1 hover:text-gray-200">Logout</a>
         <?php } else { ?>
             <a href="login.php" class="text-white bg-green-600 border rounded p-1 hover:text-gray-200">Login</a>
