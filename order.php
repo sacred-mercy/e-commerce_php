@@ -1,5 +1,4 @@
 <?php
-
 require_once 'include/header.php';
 
 // check if session is set
@@ -8,8 +7,8 @@ if (!isset($_SESSION['user'])) {
     exit();
 }
 
-// check if a post request is made
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+// check if order session is set
+if (isset($_SESSION['order'])) {
     require_once 'controllers/orderController.php';
 
     $orderController = new OrderController();
@@ -17,8 +16,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $userId = $_SESSION['user']['id'];
 
     $data = array(
-        'paymentMethod' => $_POST['paymentMethod'],
-        'totalPrice' => $_POST['totalPrice']
+        'paymentMethod' => $_SESSION['order']['paymentMethod'],
+        'totalPrice' => $_SESSION['order']['totalPrice']
     );
 
     $result = $orderController->createOrder($data, $userId);

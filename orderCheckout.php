@@ -15,6 +15,11 @@ $cartItems = $cartController->getCartItems($_SESSION['user']['id']);
 
 $totalPrice = 0;
 if ($cartItems['statusCode'] === '200') {
+    // if cart is empty
+    if (count($cartItems['cartItems']) == 0) {
+        header('location: cart.php');
+        exit();
+    }
     $cartItems = $cartItems['cartItems'];
     foreach ($cartItems as $cartItem) {
         $totalPrice += $cartItem['price'] * $cartItem['quantity'];
@@ -58,15 +63,15 @@ if ($cartItems['statusCode'] === '200') {
                 <?php } ?>
             </tbody>
         </table>
-        <form method="POST" action="order.php">
+        <form method="POST" action="pay.php">
             <input type="hidden" name="totalPrice" value="<?php echo $totalPrice; ?>">
             <div id="paymentMethodSelector">
                 <div class="flex justify-between items-center mt-4 border p-2">
                     <label for="paymentMethod">Payment Method</label>
                     <select id="paymentMethod" name="paymentMethod"
                         class="border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-800">
-                        <option value="cod">Cash on Delivery</option>
                         <option value="online">Online Payment</option>
+                        <option value="cod">Cash on Delivery</option>
                     </select>
                 </div>
             </div>

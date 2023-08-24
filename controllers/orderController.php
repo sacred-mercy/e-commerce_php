@@ -1,7 +1,6 @@
 <?php
 
 require_once 'models/orderModel.php';
-
 class OrderController
 {
     public function createOrder($data, $userId)
