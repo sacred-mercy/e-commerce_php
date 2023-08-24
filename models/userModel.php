@@ -51,10 +51,42 @@ class UserModel
             );
         }
 
+        // validating email
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return array(
+                'error' => 'Invalid email',
+                'statusCode' => '400'
+            );
+        }
+
+        // validating password length
+        if (strlen($password) < 8) {
+            return array(
+                'error' => 'Password must be atleast 6 characters long',
+                'statusCode' => '400'
+            );
+        }
+
+        // validating password strength for a capital letter, a small letter, a number and a special character
+        if (!preg_match('/[A-Z]/', $password) || !preg_match('/[a-z]/', $password) || !preg_match('/[0-9]/', $password) || !preg_match('/[^a-zA-Z\d]/', $password)) {
+            return array(
+                'error' => 'Password must contain a capital letter, a small letter, a number and a special character',
+                'statusCode' => '400'
+            );
+        }
+
+        // validating name
+        if (!preg_match('/^[a-zA-Z\s]+$/', $name)) {
+            return array(
+                'error' => 'Invalid name',
+                'statusCode' => '400'
+            );
+        }
+
         // email verification hash with time to make it unique
         $email_verification_hash = md5($email . time());
 
-        // hashing password with salt
+        // hashing password
         $password = password_hash($password, PASSWORD_DEFAULT);
 
         // expiry date set to 5 minutes from now
