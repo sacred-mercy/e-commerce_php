@@ -121,17 +121,33 @@ class UserModel
 
         // checking if values are empty
         if (empty($email) || empty($password)) {
-            return "Please fill in all fields";
+            return array(
+                'error' => 'Please fill in all fields',
+                'statusCode' => '400'
+            );
         }
 
         // checking if email is valid
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            return "Invalid email";
+            return array(
+                'error' => 'Invalid email',
+                'statusCode' => '400'
+            );
         }
 
         // check if user exists
-        if (!$this->checkUserExists($email)) {
-            return "User does not exist";
+        if ($this->checkUserExists($email)['statusCode'] === '200') {
+            if (!$this->checkUserExists($email)['exists']) {
+                return array(
+                    'error' => 'User does not exist',
+                    'statusCode' => '400'
+                );
+            }
+        } else {
+            return array(
+                'error' => $this->checkUserExists($email)['error'],
+                'statusCode' => '400'
+            );
         }
 
         // checking verification status
@@ -139,7 +155,10 @@ class UserModel
         $email_verification_status = pg_fetch_all($email_verification_status)[0]['isverified'];
 
         if ($email_verification_status == 'f') {
-            return "Please verify your email";
+            return array(
+                'error' => 'Email not verified',
+                'statusCode' => '400'
+            );
         }
 
 
@@ -150,16 +169,22 @@ class UserModel
         // checking password
         $isCorrect = password_verify($password, $user[0]['password']);
         if (!$isCorrect) {
-            return "Invalid Password";
+            return array(
+                'error' => 'Invalid password',
+                'statusCode' => '400'
+            );
         }
 
         $user = $user[0];
-        $user = array(
-            'id' => $user['id'],
-            'name' => $user['name'],
-            'email' => $user['email']
+        return array(
+            'user' => array(
+                'id' => $user['id'],
+                'name' => $user['name'],
+                'email' => $user['email'],
+                'admin' => $user['isadmin']
+            ),
+            'statusCode' => '200'
         );
-        return $user;
     }
 
     function verifyEmail($email, $token)

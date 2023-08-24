@@ -69,4 +69,11 @@ class OrderController
         return $orderDetail;
 
     }
+
+    public function getOrders($userId)
+    {
+        $orderModel = new OrderModel();
+        $orders = $orderModel->getOrders($userId);
+        return $orders;
+    }
 }

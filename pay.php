@@ -1,12 +1,14 @@
 <?php
 require_once 'include/header.php';
+
+// create order session
+$_SESSION['order'] = array(
+    'paymentMethod' => $_POST['paymentMethod'],
+    'totalPrice' => $_POST['totalPrice']
+);
+
 // check if payment mode is cod
 if ($_POST['paymentMethod'] == 'cod') {
-    // create order session
-    $_SESSION['order'] = array(
-        'paymentMethod' => $_POST['paymentMethod'],
-        'totalPrice' => $_POST['totalPrice']
-    );
     // go to order.php 
     header('location: order.php');
     exit();

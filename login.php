@@ -13,13 +13,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'];
     $password = $_POST['password'];
     $userController = new UserController();
-    $user = $userController->validateUser($email, $password);
-    if (gettype($user) !== 'string') {
-        $_SESSION['user'] = $user;
+    $result = $userController->validateUser($email, $password);
+    if ($result['statusCode'] == 200) {
+        $_SESSION['user'] = $result['user'];
         header('Location: index.php');
         exit();
     } else {
-        $errMsz = $user;
+        $errMsz = $result['error'];
     }
 }
 
