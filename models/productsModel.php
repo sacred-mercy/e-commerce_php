@@ -54,4 +54,30 @@ class ProductModel
             );
         }
     }
+
+    function createProduct($data)
+    {
+        try {
+
+            $imagePath = '';
+
+            if (isset($data['image'])) {
+                $imagePath = uniqid() . $data['image']['name'];
+                move_uploaded_file($data['image']['tmp_name'], dirname(__DIR__) . '/assets/images/' . $imagePath);
+            }
+
+            $product = pg_query($GLOBALS['db'], "INSERT INTO products (title, description, price, brand, stock, thumbnail)
+                                                    VALUES ('$data[title]', '$data[description]', $data[price], '$data[brand]', $data[stock], '$imagePath')");
+
+            return array(
+                'product' => pg_fetch_all($product),
+                'statusCode' => '200'
+            );
+        } catch (Exception $e) {
+            return array(
+                'error' => $e->getMessage(),
+                'statusCode' => '400'
+            );
+        }
+    }
 }

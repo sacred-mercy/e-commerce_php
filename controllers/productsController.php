@@ -58,4 +58,22 @@ class ProductController
             );
         }
     }
+
+    function createProduct($data)
+    {
+        // create product in model
+        $productModel = new ProductModel();
+        $product = $productModel->createProduct($data);
+        if ($product['statusCode'] === '200') {
+            return array(
+                'product' => $product['product'],
+                'statusCode' => '200'
+            );
+        } else {
+            return array(
+                'error' => $product['error'],
+                'statusCode' => '400'
+            );
+        }
+    }
 }

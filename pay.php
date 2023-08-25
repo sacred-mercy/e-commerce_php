@@ -24,7 +24,6 @@ $api = new Api($keyId, $keySecret);
 
 $orderData = [
     'amount' => $_POST['totalPrice'] * 100,
-    // rupees in paise
     'currency' => 'INR',
     'payment_capture' => 1 // auto capture
 ];

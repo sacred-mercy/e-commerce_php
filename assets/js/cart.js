@@ -33,7 +33,8 @@ function showDialog(button) {
     for (let product of productObject) {
         if (product.id == id) {
             let dialog = document.getElementById("dialog");
-            dialog.querySelector("#productImageDialog").src = product.thumbnail;
+            let thumbnailSrc = dialog.querySelector("#productImageDialog").src;
+            dialog.querySelector("#productImageDialog").src = thumbnailSrc + product.thumbnail;
             dialog.querySelector("#productNameDialog").innerText =
                 product.title;
             dialog.querySelector("#productBrandDialog").innerText =
@@ -53,7 +54,8 @@ function loadCartItems(cartItems) {
         productObject.push(item);
         let productCard = productCardTemplate.cloneNode(true);
         productCard.id = item.id;
-        productCard.querySelector("#productImage").src = item.thumbnail;
+        let thumbnailSrc = productCard.querySelector("#productImage").src;
+        productCard.querySelector("#productImage").src = thumbnailSrc + item.thumbnail;
         productCard.querySelector("#productName").innerText = item.title;
         productCard.querySelector("#productQty").innerText = item.quantity;
         productCard.classList.remove("hidden");

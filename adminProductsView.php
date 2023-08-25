@@ -29,7 +29,7 @@ $products = $productController->getAllProducts();
                 <?php foreach ($products['products'] as $product) { ?>
                     <tr class="bg-white hover:bg-gray-200 cursor-pointer" title="Click to edit"
                         onclick="window.location.href='adminProductUpdate.php?id=<?php echo $product['id']; ?>'">
-                        <td class="border p-2"><img src="<?php echo $product['thumbnail']; ?>"
+                        <td class="border p-2"><img src="<?php echo IMAGE_PATH . $product['thumbnail']; ?>"
                                 alt="<?php echo $product['title']; ?>" class="w-20 h-10"></td>
                         <td class="border p-2">
                             <?php echo $product['title']; ?>

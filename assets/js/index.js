@@ -36,7 +36,8 @@ function loadProducts(products) {
     for (let product of products) {
         let productCard = productCardTemplate.cloneNode(true);
         productCard.id = product.id;
-        productCard.querySelector("#productImage").src = product.thumbnail;
+        let thumbnailSrc = productCard.querySelector("#productImage").src
+        productCard.querySelector("#productImage").src = thumbnailSrc + product.thumbnail;
         productCard.querySelector("#productName").innerText = product.title;
         productCard.classList.remove("hidden");
         productsContainer.appendChild(productCard);
@@ -64,7 +65,8 @@ function showModal(id) {
         if (product.id == id) {
             console.log(product);
             let dialog = document.getElementById("dialog");
-            dialog.querySelector("#productImageDialog").src = product.thumbnail;
+            let thumbnailSrc = dialog.querySelector("#productImageDialog").src
+            dialog.querySelector("#productImageDialog").src = thumbnailSrc + product.thumbnail;
             dialog.querySelector("#productNameDialog").innerText =
                 product.title;
             dialog.querySelector("#productBrandDialog").innerText =

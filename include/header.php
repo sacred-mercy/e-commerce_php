@@ -9,5 +9,6 @@
 <body>
 <?php 
 require_once 'helpers/session_helper.php';
+require_once 'helpers/paths_helper.php';
 require_once 'navbar.php';
 ?>

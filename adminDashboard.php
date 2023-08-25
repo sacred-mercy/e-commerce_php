@@ -8,9 +8,9 @@ $data = $adminController->getDashboardData();
 $totalOrders = $data['totalOrders'];
 $totalProducts = $data['totalProducts'];
 $totalUsers = $data['totalUsers'];
-$totalRevenue = $data['totalRevenue'];
+$totalRevenue = (isset($data['totalRevenue'])) ? $data['totalRevenue'] : 0;
 $todayOrders = $data['todayOrders'];
-$todayRevenue = $data['todayRevenue'];
+$todayRevenue = (isset($data['todayRevenue'])) ? $data['todayRevenue'] : 0;
 ?>
 
 <!-- Main Content -->
