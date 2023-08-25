@@ -45,30 +45,19 @@ class AdminModel
     function getMostSoldProducts($timePeriod)
     {
         try {
-            $query = "";
-            if ($timePeriod === 'lifetime') {
-                $query = "SELECT p.title, COUNT(*) AS product_count
-                            FROM orders AS o
-                            JOIN orders_detail AS od ON o.id = od.order_id
-                            JOIN products AS p ON p.id = od.product_id 
-                            GROUP BY p.title
-                            ORDER BY product_count DESC
-                            LIMIT 5";
-            } else {
-                $query = "SELECT p.title, COUNT(*) AS product_count
-                            FROM orders AS o
-                            JOIN orders_detail AS od ON o.id = od.order_id
-                            JOIN products AS p ON p.id = od.product_id
-                            WHERE o.date_time >= DATE_TRUNC('" . $timePeriod . "', CURRENT_DATE)
-                            GROUP BY p.title
-                            ORDER BY product_count DESC
-                            LIMIT 5";
-            }
+            $query = "SELECT p.title, COUNT(*) * SUM(od.quantity) AS product_count
+            FROM orders AS o
+            JOIN orders_detail AS od ON o.id = od.order_id
+            JOIN products AS p ON p.id = od.product_id"
+                . (($timePeriod === 'lifetime') ? "" : " WHERE o.date_time >= DATE_TRUNC('" . $timePeriod . "', CURRENT_DATE)")
+                . " GROUP BY p.title
+                    ORDER BY product_count DESC
+                    LIMIT 5";
+
             $products = pg_query($GLOBALS['db'], $query);
             $products = pg_fetch_all($products);
             return array(
                 'products' => $products,
-                'query' => $query,
                 'statusCode' => '200'
             );
         } catch (Exception $e) {
