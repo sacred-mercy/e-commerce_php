@@ -9,6 +9,10 @@ if (!isset($_SESSION['user'])) {
 
 // check if order session is set
 if (isset($_SESSION['order'])) {
+    if ($_SESSION['order']['paymentComplete'] !== 'true') {
+        header('location: cart.php');
+        exit();
+    }
     require_once 'controllers/orderController.php';
 
     $orderController = new OrderController();
@@ -17,7 +21,8 @@ if (isset($_SESSION['order'])) {
 
     $data = array(
         'paymentMethod' => $_SESSION['order']['paymentMethod'],
-        'totalPrice' => $_SESSION['order']['totalPrice']
+        'totalPrice' => $_SESSION['order']['totalPrice'],
+        'addressId' => $_SESSION['order']['addressId'],
     );
 
     $result = $orderController->createOrder($data, $userId);

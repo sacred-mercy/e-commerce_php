@@ -70,10 +70,39 @@ class OrderController
 
     }
 
-    public function getOrders($userId)
+    public function getAllOrders()
     {
         $orderModel = new OrderModel();
-        $orders = $orderModel->getOrders($userId);
+        $orders = null;
+        // check if user is admin
+        if ($_SESSION['user']['admin'] == 't') {
+            $orders = $orderModel->getAllOrders();
+        } else {
+            $userId = $_SESSION['user']['id'];
+            $orders = $orderModel->getorders($userId);
+        }
         return $orders;
+    }
+
+    public function getOrderById($orderId)
+    {
+        $orderModel = new OrderModel();
+        
+        // checking if user is admin
+        if ($_SESSION['user']['admin'] == 't') {
+            $order = $orderModel->getOrderById($orderId);
+            return $order;
+        }
+
+        // checking if user is authorized to view this order
+        $userId = $_SESSION['user']['id'];
+        if (!$orderModel->isAuthorized($orderId, $userId)) {
+            return array(
+                'error' => 'You are not authorized to view this order',
+                'statusCode' => '400'
+            );
+        }
+        $order = $orderModel->getOrderById($orderId);
+        return $order;
     }
 }

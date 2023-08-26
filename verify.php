@@ -13,12 +13,10 @@ $success = true;
 $error = "Payment Failed";
 
 
-if (empty($_POST['razorpay_payment_id']) === false)
-{
+if (empty($_POST['razorpay_payment_id']) === false) {
     $api = new Api($keyId, $keySecret);
 
-    try
-    {
+    try {
         // Please note that the razorpay order ID must
         // come from a trusted source (session here, but
         // could be database or something else)
@@ -29,22 +27,17 @@ if (empty($_POST['razorpay_payment_id']) === false)
         );
 
         $api->utility->verifyPaymentSignature($attributes);
-    }
-    catch(SignatureVerificationError $e)
-    {
+    } catch (SignatureVerificationError $e) {
         $success = false;
         $error = 'Razorpay Error : ' . $e->getMessage();
     }
 }
 
-if ($success === true)
-{
-   // redirect to order.php
+if ($success === true) {
+    // redirect to order.php
+    $_SESSION['order']['paymentComplete'] = 'true';
     header('location: order.php');
-}
-else
-{
+} else {
     $html = "<p>Your payment failed</p>
              <p>{$error}</p>";
 }
-

@@ -7,11 +7,11 @@
             <?php if (isset($_SESSION['user'])) { ?>
                 <?php if ($_SESSION['user']['admin'] == 't') { ?>
                     <li><a class="hover:text-gray-200" href="adminDashboard.php">Dashboard</a></li>
-                    <li><a class="hover:text-gray-200" href="adminOrders.php">Orders</a></li>
+                    <li><a class="hover:text-gray-200" href="ordersList.php">Orders</a></li>
                     <li><a class="hover:text-gray-200" href="adminProductsView.php">Products</a></li>
                 <?php } else { ?>
                     <li><a class="hover:text-gray-200" href="cart.php">Cart</a></li>
-                    <li><a class="hover:text-gray-200" href="orderList.php">Orders</a></li>
+                    <li><a class="hover:text-gray-200" href="ordersList.php">Orders</a></li>
                 <?php } ?>
             </ul>
             <a href="logout.php" class="text-white bg-red-600 border rounded p-1 hover:text-gray-200">Logout</a>

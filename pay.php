@@ -1,10 +1,11 @@
 <?php
 require_once 'include/header.php';
 
-// create order session
 $_SESSION['order'] = array(
     'paymentMethod' => $_POST['paymentMethod'],
-    'totalPrice' => $_POST['totalPrice']
+    'totalPrice' => $_SESSION['order']['totalPrice'],
+    'addressId' => $_POST['address'],
+    'paymentComplete' => 'false'
 );
 
 // check if payment mode is cod
@@ -13,6 +14,7 @@ if ($_POST['paymentMethod'] == 'cod') {
     header('location: order.php');
     exit();
 }
+
 require('razorpay-php/config.php');
 require('razorpay-php/Razorpay.php');
 
@@ -23,7 +25,7 @@ use Razorpay\Api\Api;
 $api = new Api($keyId, $keySecret);
 
 $orderData = [
-    'amount' => $_POST['totalPrice'] * 100,
+    'amount' => $_SESSION['order']['totalPrice'] * 100, 
     'currency' => 'INR',
     'payment_capture' => 1 // auto capture
 ];
