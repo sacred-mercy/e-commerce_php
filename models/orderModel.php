@@ -51,6 +51,16 @@ class OrderModel
         }
     }
 
+    function orderExists($order_id){
+        $order = pg_query($GLOBALS['db'], "SELECT * FROM orders WHERE id = '$order_id'");
+        $order = pg_fetch_assoc($order);
+        if ($order) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     function isAuthorized($order_id, $user_id)
     {
         $order = pg_query($GLOBALS['db'], "SELECT * FROM orders WHERE id = '$order_id' AND user_id = '$user_id'");

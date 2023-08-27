@@ -94,6 +94,14 @@ class OrderController
             return $order;
         }
 
+        // checking order exists
+        if (!$orderModel->orderExists($orderId)){
+            return array(
+                'error' => "Order dosen't exist",
+                'statusCode' => '400'
+            );
+        }
+
         // checking if user is authorized to view this order
         $userId = $_SESSION['user']['id'];
         if (!$orderModel->isAuthorized($orderId, $userId)) {
