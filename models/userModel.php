@@ -1,20 +1,13 @@
 <?php
 
 require 'config\db.php';
+require_once 'functions\getSafeValue.php';
 
 class UserModel
 {
-    function getSafeValue($value)
-    {
-        $value = trim($value);
-        $value = stripslashes($value);
-        $value = htmlspecialchars($value);
-        return $value;
-    }
-
     function checkUserExists($email)
     {
-        $email = $this->getSafeValue($email);
+        $email = getSafeValue($email);
         try {
             $user = pg_query($GLOBALS['db'], "SELECT * FROM users WHERE email = '$email'");
             $user = pg_fetch_all($user);
@@ -39,9 +32,9 @@ class UserModel
 
     function createUser($name, $email, $password)
     {
-        $email = $this->getSafeValue($email);
-        $password = $this->getSafeValue($password);
-        $name = $this->getSafeValue($name);
+        $email = getSafeValue($email);
+        $password = getSafeValue($password);
+        $name = getSafeValue($name);
 
         // checking if values are empty
         if (empty($email) || empty($password) || empty($name)) {
@@ -116,8 +109,8 @@ class UserModel
 
     function validateUser($email, $password)
     {
-        $email = $this->getSafeValue($email);
-        $password = $this->getSafeValue($password);
+        $email = getSafeValue($email);
+        $password = getSafeValue($password);
 
         // checking if values are empty
         if (empty($email) || empty($password)) {
@@ -189,8 +182,8 @@ class UserModel
 
     function verifyEmail($email, $token)
     {
-        $email = $this->getSafeValue($email);
-        $token = $this->getSafeValue($token);
+        $email = getSafeValue($email);
+        $token = getSafeValue($token);
 
         // checking if values are empty
         if (empty($email) || empty($token)) {

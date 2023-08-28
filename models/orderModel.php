@@ -1,25 +1,18 @@
 <?php
 
 require_once 'config/db.php';
-require_once 'smtp/smtpMailer.php';
+require_once 'functions/getSafeValue.php';
 
 class OrderModel
 {
-    function getSafeValue($value)
-    {
-        $value = trim($value);
-        $value = stripslashes($value);
-        $value = htmlspecialchars($value);
-        return $value;
-    }
     function createOrder($data, $userId)
     {
-        $user_id = $this->getSafeValue($userId);
-        $pay_method = $this->getSafeValue($data['paymentMethod']);
-        $price = $this->getSafeValue($data['totalPrice']);
-        $status = $this->getSafeValue("pending");
-        $date_time = $this->getSafeValue(date("Y-m-d H:i:s"));
-        $address_id = $this->getSafeValue($data['addressId']);
+        $user_id = getSafeValue($userId);
+        $pay_method = getSafeValue($data['paymentMethod']);
+        $price = getSafeValue($data['totalPrice']);
+        $status = getSafeValue("pending");
+        $date_time = getSafeValue(date("Y-m-d H:i:s"));
+        $address_id = getSafeValue($data['addressId']);
 
         $order = pg_query($GLOBALS['db'], "INSERT INTO orders (user_id, pay_method, price, status, date_time, address_id) 
                                             VALUES ('$user_id', '$pay_method', '$price', '$status', '$date_time', '$address_id')");
@@ -52,8 +45,12 @@ class OrderModel
     }
 
     function orderExists($order_id){
+        $order_id = getSafeValue($order_id);
+
         $order = pg_query($GLOBALS['db'], "SELECT * FROM orders WHERE id = '$order_id'");
+        
         $order = pg_fetch_assoc($order);
+        
         if ($order) {
             return true;
         } else {
@@ -63,8 +60,13 @@ class OrderModel
 
     function isAuthorized($order_id, $user_id)
     {
+        $order_id = getSafeValue($order_id);
+        $user_id = getSafeValue($user_id);
+
         $order = pg_query($GLOBALS['db'], "SELECT * FROM orders WHERE id = '$order_id' AND user_id = '$user_id'");
+        
         $order = pg_fetch_assoc($order);
+        
         if ($order) {
             return true;
         } else {
@@ -77,6 +79,7 @@ class OrderModel
         try {
             $orders = pg_query($GLOBALS['db'], "SELECT id, status, date_time AT TIME ZONE 'Asia/Kolkata' AS date_time FROM orders");
             $orders = pg_fetch_all($orders);
+
             return array(
                 'orders' => $orders,
                 'statusCode' => '200'
@@ -92,9 +95,11 @@ class OrderModel
     function getOrders($userId)
     {
         try {
-            $user_id = $this->getSafeValue($userId);
+            $user_id = getSafeValue($userId);
+
             $orders = pg_query($GLOBALS['db'], "SELECT id, status, date_time AT TIME ZONE 'Asia/Kolkata' AS date_time FROM orders WHERE user_id = '$user_id'");
             $orders = pg_fetch_all($orders);
+
             return array(
                 'orders' => $orders,
                 'statusCode' => '200'
@@ -110,6 +115,8 @@ class OrderModel
     function getOrderById($id)
     {
         try {
+            $id = getSafeValue($id);
+
             $order = pg_query($GLOBALS['db'], "SELECT od.quantity , p.title, p.price 
                                             FROM orders o
                                             JOIN orders_detail od 
@@ -118,6 +125,7 @@ class OrderModel
                                             ON od.product_id = p.id
                                             WHERE od.order_id ='$id'");
             $order = pg_fetch_all($order);
+            
             return array(
                 'order' => $order,
                 'order_info' => pg_fetch_assoc(pg_query($GLOBALS['db'], "SELECT status , price FROM orders WHERE id = '$id'")),

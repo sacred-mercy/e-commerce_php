@@ -1,6 +1,8 @@
 <?php
 
 require_once 'models/orderModel.php';
+require_once 'smtp/smtpMailer.php';
+
 class OrderController
 {
     public function createOrder($data, $userId)
@@ -63,8 +65,8 @@ class OrderController
             fwrite($invoice, $invoiceContent);
             fclose($invoice);
 
-            // smtp_mailer($email, $subject, $body, "invoices/invoice_$order_id.html", "invoice_$order_id.html");
-            smtp_mailer($email, $subject, $body, null, null);
+            smtp_mailer($email, $subject, $body, "invoices/invoice_$order_id.html", "invoice_$order_id.html");
+            // smtp_mailer($email, $subject, $body, null, null);
         }
         return $orderDetail;
 

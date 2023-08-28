@@ -1,16 +1,12 @@
 <?php
 
 require_once dirname(__DIR__) . '/config/db.php';
+require_once dirname(__DIR__) . '/functions/getSafeValue.php';
 
 class AddressModel {
-
-    function getSafeValue($value){
-        $value = trim($value);
-        $value = stripslashes($value);
-        $value = htmlspecialchars($value);
-        return $value;
-    }
     function getAddress($id){
+        $id = getSafeValue($id);
+        
         $query = "SELECT * FROM address WHERE user_id = $id AND is_active = 't'";
 
         $result = pg_query($GLOBALS['db'], $query);
@@ -29,11 +25,11 @@ class AddressModel {
     }
 
     function addAddress($userId, $addressObj){
-        $line1 = $this->getSafeValue($addressObj['line1']);
-        $line2 = $this->getSafeValue($addressObj['line2']);
-        $district = $this->getSafeValue($addressObj['district']);
-        $state = $this->getSafeValue($addressObj['state']);
-        $pincode = $this->getSafeValue($addressObj['pincode']);
+        $line1 = getSafeValue($addressObj['line1']);
+        $line2 = getSafeValue($addressObj['line2']);
+        $district = getSafeValue($addressObj['district']);
+        $state = getSafeValue($addressObj['state']);
+        $pincode = getSafeValue($addressObj['pincode']);
 
         $query = "INSERT INTO address (user_id, line1, line2, district, state, pincode) VALUES ($userId, '$line1', '$line2', '$district', '$state', '$pincode')";
 

@@ -1,6 +1,7 @@
 <?php
 
 require_once dirname(__DIR__) . '/config/db.php';
+require_once dirname(__DIR__) . '/functions/getSafeValue.php';
 
 class ProductModel
 {
@@ -24,6 +25,8 @@ class ProductModel
     function getProductById($id)
     {
         try {
+            $id = getSafeValue($id);
+
             $product = pg_query_params($GLOBALS['db'], "SELECT * FROM products WHERE id = $1", array($id));
 
             return array(
@@ -41,6 +44,15 @@ class ProductModel
     function updateProduct($data)
     {
         try {
+            $data = array(
+                'title' => getSafeValue($data['title']),
+                'description' => getSafeValue($data['description']),
+                'price' => getSafeValue($data['price']),
+                'brand' => getSafeValue($data['brand']),
+                'stock' => getSafeValue($data['stock']),
+                'product_id' => getSafeValue($data['product_id'])
+            );
+
             $product = pg_query($GLOBALS['db'], "UPDATE products SET title = '$data[title]', description = '$data[description]', price = $data[price], brand = '$data[brand]', stock = $data[stock] WHERE id = $data[product_id]");
 
             return array(
@@ -58,6 +70,15 @@ class ProductModel
     function createProduct($data)
     {
         try {
+
+            $data = array(
+                'title' => getSafeValue($data['title']),
+                'description' => getSafeValue($data['description']),
+                'price' => getSafeValue($data['price']),
+                'brand' => getSafeValue($data['brand']),
+                'stock' => getSafeValue($data['stock']),
+                'image' => $data['image']
+            );
 
             $imagePath = '';
 

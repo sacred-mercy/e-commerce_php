@@ -1,6 +1,7 @@
 <?php
 
 require_once dirname(__DIR__) . '/config\db.php';
+require_once dirname(__DIR__) . '/functions\getSafeValue.php';
 
 class AdminModel
 {
@@ -45,6 +46,8 @@ class AdminModel
     function getMostSoldProducts($timePeriod)
     {
         try {
+            $timePeriod = getSafeValue($timePeriod);
+
             $query = "SELECT p.title, COUNT(*) * SUM(od.quantity) AS product_count
             FROM orders AS o
             JOIN orders_detail AS od ON o.id = od.order_id
@@ -56,6 +59,7 @@ class AdminModel
 
             $products = pg_query($GLOBALS['db'], $query);
             $products = pg_fetch_all($products);
+            
             return array(
                 'products' => $products,
                 'statusCode' => '200'

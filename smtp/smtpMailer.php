@@ -1,5 +1,11 @@
 <?php
-include('smtp/PHPMailerAutoload.php');
+require_once 'PHPMailer.php';
+require_once 'SMTP.php';
+require_once 'Exception.php';
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
 function smtp_mailer($to, $subject, $msg, $file, $filename)
 {
 	require_once 'env.php';
