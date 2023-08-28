@@ -10,6 +10,8 @@ $_SESSION['order'] = array(
 
 // check if payment mode is cod
 if ($_POST['paymentMethod'] == 'cod') {
+    // set payment complete to true
+    $_SESSION['order']['paymentComplete'] = 'true';
     // go to order.php 
     header('location: order.php');
     exit();
