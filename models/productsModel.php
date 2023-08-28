@@ -5,10 +5,30 @@ require_once dirname(__DIR__) . '/functions/getSafeValue.php';
 
 class ProductModel
 {
-    function getAllProducts()
+    function getTotalProducts(){
+        try {
+            $count = pg_query($GLOBALS['db'], "SELECT COUNT(*) FROM products");
+
+            return array(
+                'count' => pg_fetch_all($count),
+                'statusCode' => '200'
+            );
+        } catch (Exception $e) {
+            return array(
+                'error' => $e->getMessage(),
+                'statusCode' => '400'
+            );
+        }
+    }
+    function getAllProducts($page, $limit)
     {
         try {
-            $products = pg_query($GLOBALS['db'], "SELECT * FROM products");
+            $page = getSafeValue($page);
+            $limit = getSafeValue($limit);
+
+            $offset = ($page - 1) * $limit;
+
+            $products = pg_query_params($GLOBALS['db'], "SELECT * FROM products LIMIT $1 OFFSET $2", array($limit, $offset));
 
             return array(
                 'products' => pg_fetch_all($products),

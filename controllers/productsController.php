@@ -5,11 +5,28 @@ require_once dirname(__DIR__) . '/models/productsModel.php';
 class ProductController
 {
 
-    function getAllProducts()
+    function getTotalProducts(){
+        // get total products from model
+        $productModel = new ProductModel();
+        $count = $productModel->getTotalProducts();
+        if ($count['statusCode'] === '200') {
+            return array(
+                'count' => $count['count'][0]['count'],
+                'statusCode' => '200'
+            );
+        } else {
+            return array(
+                'error' => $count['error'],
+                'statusCode' => '400'
+            );
+        }
+    }
+
+    function getAllProducts($page = 1, $limit = 2)
     {
         // get products from model
         $productModel = new ProductModel();
-        $products = $productModel->getAllProducts();
+        $products = $productModel->getAllProducts($page, $limit);
         if ($products['statusCode'] === '200') {
             return array(
                 'products' => $products['products'],
