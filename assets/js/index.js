@@ -11,7 +11,7 @@ xhr.send();
 xhr.onload = () => {
     if (xhr.status === 200) {
         productsData = JSON.parse(xhr.response);
-        if(productsData.statusCode == 200){
+        if (productsData.statusCode == 200) {
             productsData = productsData.products;
             loadProducts(productsData.slice(0, 5));
             if (productsData.length <= 5) {
@@ -19,13 +19,13 @@ xhr.onload = () => {
             }
             if (productsData.length === 0) {
                 document.getElementById("productsContainer").innerText =
-                "No products found";
+                    "No products found";
             } else {
                 document.getElementById("LoadMoreBtn").classList.remove("hidden");
             }
         } else {
             document.getElementById("productsContainer").innerText =
-            "Something went wrong";
+                "Something went wrong";
         }
     }
 };
@@ -86,11 +86,12 @@ function addToCart(button) {
     let id = card.id;
     // ajax request to add product to cart
     let xhr = new XMLHttpRequest();
-    xhr.open("POST", "routes/cartRoutes.php?request=addProduct&productId=" + id, true);
+    xhr.open("PUT", "routes/cartRoutes.php?request=addProduct&productId=" + id, true);
     xhr.send();
     xhr.onload = () => {
-        if (xhr.status === 200) {
-            if (xhr.response === "notLoggedIn") {
+        if (xhr.status == 200) {
+            console.log(xhr.response);
+            if (xhr.response == "notLoggedIn") {
                 alert("Please login to add products to cart");
                 return;
             }

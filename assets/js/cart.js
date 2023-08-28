@@ -109,7 +109,7 @@ function deleteProduct(button) {
     let id = productCard.id;
 
     let xhr = new XMLHttpRequest();
-    xhr.open("POST", "routes/cartRoutes.php?request=deleteCartItem&id=" + id, true);
+    xhr.open("DELETE", "routes/cartRoutes.php?request=deleteCartItem&id=" + id, true);
     xhr.send();
     xhr.onload = () => {
         if (xhr.status === 200) {

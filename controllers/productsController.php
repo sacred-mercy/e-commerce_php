@@ -23,11 +23,29 @@ class ProductController
         }
     }
 
-    function getAllProducts($page, $limit, $sort_by, $sort_order)
+    function getAllProducts()
     {
         // get products from model
         $productModel = new ProductModel();
-        $products = $productModel->getAllProducts($page, $limit, $sort_by, $sort_order);
+        $products = $productModel->getAllProducts();
+        if ($products['statusCode'] === '200') {
+            return array(
+                'products' => $products['products'],
+                'statusCode' => '200'
+            );
+        } else {
+            return array(
+                'error' => $products['error'],
+                'statusCode' => '400'
+            );
+        }
+    }
+
+    function productsWithPaggingAndSorting($page, $limit, $sort_by, $sort_order)
+    {
+        // get products from model
+        $productModel = new ProductModel();
+        $products = $productModel->productsWithPaggingAndSorting($page, $limit, $sort_by, $sort_order);
         if ($products['statusCode'] === '200') {
             return array(
                 'products' => $products['products'],

@@ -15,7 +15,7 @@ $productController = new ProductController();
 $sort_by = isset($_GET['sort_by']) ? $_GET['sort_by'] : 'id';
 $sort_order = isset($_GET['sort_order']) ? $_GET['sort_order'] : 'asc';
 
-$products = $productController->getAllProducts($current_page, $products_per_page, $sort_by, $sort_order);
+$products = $productController->productsWithPaggingAndSorting($current_page, $products_per_page, $sort_by, $sort_order);
 
 // Get the total number of products
 $total_products = $productController->getTotalProducts();
@@ -36,11 +36,19 @@ $total_pages = ceil($total_products['count'] / $products_per_page);
             <thead class="bg-gray-800 text-gray-100">
                 <tr>
                     <th class="border p-2">Thumbnail</th>
-                    <th class="border p-2"><a href="?sort_by=title&sort_order=<?php echo $sort_order == 'asc' ? 'desc' : 'asc'; ?>">Title</a></th>
-                    <th class="border p-2"><a href="?sort_by=description&sort_order=<?php echo $sort_order == 'asc' ? 'desc' : 'asc'; ?>">Description</a></th>
-                    <th class="border p-2"><a href="?sort_by=price&sort_order=<?php echo $sort_order == 'asc' ? 'desc' : 'asc'; ?>">Price</a></th>
-                    <th class="border p-2"><a href="?sort_by=brand&sort_order=<?php echo $sort_order == 'asc' ? 'desc' : 'asc'; ?>">Brand</a></th>
-                    <th class="border p-2"><a href="?sort_by=stock&sort_order=<?php echo $sort_order == 'asc' ? 'desc' : 'asc'; ?>">Stock</a></th>
+                    <th class="border p-2"><a
+                            href="?sort_by=title&sort_order=<?php echo $sort_order == 'asc' ? 'desc' : 'asc'; ?>">Title</a>
+                    </th>
+                    <th class="border p-2">Description</th>
+                    <th class="border p-2"><a
+                            href="?sort_by=price&sort_order=<?php echo $sort_order == 'asc' ? 'desc' : 'asc'; ?>">Price</a>
+                    </th>
+                    <th class="border p-2"><a
+                            href="?sort_by=brand&sort_order=<?php echo $sort_order == 'asc' ? 'desc' : 'asc'; ?>">Brand</a>
+                    </th>
+                    <th class="border p-2"><a
+                            href="?sort_by=stock&sort_order=<?php echo $sort_order == 'asc' ? 'desc' : 'asc'; ?>">Stock</a>
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -80,7 +88,8 @@ $total_pages = ceil($total_products['count'] / $products_per_page);
 
                 <?php for ($i = 1; $i <= $total_pages; $i++) { ?>
                     <li class="mr-1">
-                        <a href="?page=<?php echo $i; ?>&sort_by=<?php echo $sort_by; ?>&sort_order=<?php echo $sort_order; ?>" class="block py-2 px-3 text-gray-600 rounded hover:bg-gray-200 
+                        <a href="?page=<?php echo $i; ?>&sort_by=<?php echo $sort_by; ?>&sort_order=<?php echo $sort_order; ?>"
+                            class="block py-2 px-3 text-gray-600 rounded hover:bg-gray-200 
                             <?php if ($current_page == $i) {
                                 echo 'bg-gray-200';
                             } ?>"><?php echo $i; ?></a>
