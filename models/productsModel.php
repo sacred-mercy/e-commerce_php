@@ -5,7 +5,8 @@ require_once dirname(__DIR__) . '/functions/getSafeValue.php';
 
 class ProductModel
 {
-    function getTotalProducts(){
+    function getTotalProducts()
+    {
         try {
             $count = pg_query($GLOBALS['db'], "SELECT COUNT(*) FROM products");
 
@@ -20,15 +21,20 @@ class ProductModel
             );
         }
     }
-    function getAllProducts($page, $limit)
+    function getAllProducts($page, $limit, $sort_by, $sort_order)
     {
         try {
             $page = getSafeValue($page);
             $limit = getSafeValue($limit);
+            $sort_by = getSafeValue($sort_by);
+            $sort_order = getSafeValue($sort_order);
 
             $offset = ($page - 1) * $limit;
 
-            $products = pg_query_params($GLOBALS['db'], "SELECT * FROM products LIMIT $1 OFFSET $2", array($limit, $offset));
+            $products = pg_query(
+                $GLOBALS['db'],
+                "SELECT * FROM products ORDER BY $sort_by $sort_order LIMIT $limit OFFSET $offset"
+            );
 
             return array(
                 'products' => pg_fetch_all($products),

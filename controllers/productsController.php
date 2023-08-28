@@ -5,7 +5,8 @@ require_once dirname(__DIR__) . '/models/productsModel.php';
 class ProductController
 {
 
-    function getTotalProducts(){
+    function getTotalProducts()
+    {
         // get total products from model
         $productModel = new ProductModel();
         $count = $productModel->getTotalProducts();
@@ -22,11 +23,11 @@ class ProductController
         }
     }
 
-    function getAllProducts($page = 1, $limit = 2)
+    function getAllProducts($page, $limit, $sort_by, $sort_order)
     {
         // get products from model
         $productModel = new ProductModel();
-        $products = $productModel->getAllProducts($page, $limit);
+        $products = $productModel->getAllProducts($page, $limit, $sort_by, $sort_order);
         if ($products['statusCode'] === '200') {
             return array(
                 'products' => $products['products'],
