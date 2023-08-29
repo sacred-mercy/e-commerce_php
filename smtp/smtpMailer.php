@@ -6,7 +6,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
-function smtp_mailer($to, $subject, $msg, $file, $filename)
+function smtp_mailer($to, $subject, $msg, $file = null, $filename = null)
 {
 	require_once 'env.php';
 	$email = $EMAIL;

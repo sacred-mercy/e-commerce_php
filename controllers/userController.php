@@ -54,7 +54,7 @@ class UserController
             $email = $userModel->getEmailByToken($token);
             $subject = "Password Reset";
             $msg = "Your password has been reset successfully";
-            smtp_mailer($email, $subject, $msg, null, null);
+            smtp_mailer($email, $subject, $msg);    
         }
 
         // generate new token for the user
@@ -73,7 +73,7 @@ class UserController
             // get project url path
             $path = $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']);
             $msg = "Click <a href='http://$path/resetPassword.php?token=$token'>here</a> to reset your password";
-            smtp_mailer($email, $subject, $msg, null, null);
+            smtp_mailer($email, $subject, $msg);
         }
         return $user;
     }
@@ -102,7 +102,7 @@ class UserController
             // get project url path
             $path = $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']);
             $msg = "Click <a href='http://$path/emailVerify.php?email=$email&token=$token'>here</a> to verify your email";
-            smtp_mailer($email, $subject, $msg, null, null);
+            smtp_mailer($email, $subject, $msg);
         }
         return $user;
     }

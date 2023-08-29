@@ -11,7 +11,7 @@ class OrderController
         $result = $orderModel->changeStatus($orderId, 'cancelled');
         return $result;
     }
-    
+
     public function changeStatus($orderId, $status)
     {
         $orderModel = new OrderModel();
@@ -80,7 +80,6 @@ class OrderController
             fclose($invoice);
 
             smtp_mailer($email, $subject, $body, "invoices/invoice_$order_id.html", "invoice_$order_id.html");
-            // smtp_mailer($email, $subject, $body, null, null);
         }
         return $orderDetail;
 

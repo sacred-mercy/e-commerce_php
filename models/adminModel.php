@@ -60,7 +60,7 @@ class AdminModel
 
             $products = pg_query($GLOBALS['db'], $query);
             $products = pg_fetch_all($products);
-            
+
             return array(
                 'products' => $products,
                 'statusCode' => '200'
