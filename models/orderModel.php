@@ -5,6 +5,32 @@ require_once 'functions/getSafeValue.php';
 
 class OrderModel
 {
+    function changeStatus($orderId, $status)
+    {
+        try {
+            $order_id = getSafeValue($orderId);
+            $status = getSafeValue($status);
+
+            $order = pg_query($GLOBALS['db'], "UPDATE orders SET status = '$status' WHERE id = '$order_id'");
+
+            if ($order) {
+                return array(
+                    'message' => 'Order status updated successfully',
+                    'statusCode' => '200'
+                );
+            } else {
+                return array(
+                    'error' => 'Something went wrong',
+                    'statusCode' => '400'
+                );
+            }
+        } catch (Exception $e) {
+            return array(
+                'error' => $e->getMessage(),
+                'statusCode' => '400'
+            );
+        }
+    }
     function createOrder($data, $userId)
     {
         $user_id = getSafeValue($userId);
@@ -44,13 +70,14 @@ class OrderModel
         }
     }
 
-    function orderExists($order_id){
+    function orderExists($order_id)
+    {
         $order_id = getSafeValue($order_id);
 
         $order = pg_query($GLOBALS['db'], "SELECT * FROM orders WHERE id = '$order_id'");
-        
+
         $order = pg_fetch_assoc($order);
-        
+
         if ($order) {
             return true;
         } else {
@@ -64,9 +91,9 @@ class OrderModel
         $user_id = getSafeValue($user_id);
 
         $order = pg_query($GLOBALS['db'], "SELECT * FROM orders WHERE id = '$order_id' AND user_id = '$user_id'");
-        
+
         $order = pg_fetch_assoc($order);
-        
+
         if ($order) {
             return true;
         } else {
@@ -77,7 +104,7 @@ class OrderModel
     function getAllOrders()
     {
         try {
-            $orders = pg_query($GLOBALS['db'], "SELECT id, status, date_time AT TIME ZONE 'Asia/Kolkata' AS date_time FROM orders");
+            $orders = pg_query($GLOBALS['db'], "SELECT id, status, date_time AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kolkata' AS date_time FROM orders ORDER BY id DESC");
             $orders = pg_fetch_all($orders);
 
             return array(
@@ -97,7 +124,7 @@ class OrderModel
         try {
             $user_id = getSafeValue($userId);
 
-            $orders = pg_query($GLOBALS['db'], "SELECT id, status, date_time AT TIME ZONE 'Asia/Kolkata' AS date_time FROM orders WHERE user_id = '$user_id'");
+            $orders = pg_query($GLOBALS['db'], "SELECT id, status, date_time AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kolkata' AS date_time FROM orders WHERE user_id = '$user_id' ORDER BY id DESC");
             $orders = pg_fetch_all($orders);
 
             return array(
@@ -125,7 +152,7 @@ class OrderModel
                                             ON od.product_id = p.id
                                             WHERE od.order_id ='$id'");
             $order = pg_fetch_all($order);
-            
+
             return array(
                 'order' => $order,
                 'order_info' => pg_fetch_assoc(pg_query($GLOBALS['db'], "SELECT status , price FROM orders WHERE id = '$id'")),

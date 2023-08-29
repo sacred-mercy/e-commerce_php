@@ -7,9 +7,29 @@ if (!isset($_SESSION['user'])) {
     header('location: login.php');
 }
 
-// get order details
 require_once 'controllers/orderController.php';
 $orderController = new OrderController();
+
+// checking if a post request is made
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // check if user is admin
+    if ($_SESSION['user']['admin'] == 't') {
+        $result = $orderController->changeStatus($_POST['id'], $_POST['status']);
+        if ($result['statusCode'] == 200) {
+            header('location: ordersViewDetails.php?id=' . $_POST['id']);
+        } else {
+            echo '<div class="flex justify-center item-center h-screen text-2xl text-red-800">
+            Something went wrong!
+        </div>';
+        }
+    } else {
+        echo '<div class="flex justify-center item-center h-screen text-2xl text-red-800">
+            You are not authorized to perform this action!
+        </div>';
+    }
+}
+
+// get order details
 $result = $orderController->getOrderById($_GET['id']);
 ?>
 
@@ -91,10 +111,16 @@ $result = $orderController->getOrderById($_GET['id']);
 
             <?php // check if session user is admin or not
                 if ($_SESSION['user']['admin'] == 't') { ?>
-                <div class="flex justify-center">
+                <div class="flex justify-between p-4">
+                    <div>
+                        <h1 class="text-2xl font-bold my-4">Status</h1>
+                        <p class="mb-2">
+                            <?php echo $result['order_info']['status']; ?>
+                        </p>
+                    </div>
                     <div>
                         <h1 class="text-2xl font-bold my-4">Change Status</h1>
-                        <form action="controllers/orderController.php" method="POST">
+                        <form action="ordersViewDetails.php" method="POST">
                             <input type="hidden" name="id" value="<?php echo $_GET['id']; ?>">
                             <select name="status" class="border p-2 mb-2">
                                 <option value="pending">Pending</option>

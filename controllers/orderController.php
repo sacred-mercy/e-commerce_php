@@ -5,6 +5,20 @@ require_once 'smtp/smtpMailer.php';
 
 class OrderController
 {
+    function cancelOrder($orderId)
+    {
+        $orderModel = new OrderModel();
+        $result = $orderModel->changeStatus($orderId, 'cancelled');
+        return $result;
+    }
+    
+    public function changeStatus($orderId, $status)
+    {
+        $orderModel = new OrderModel();
+        $result = $orderModel->changeStatus($orderId, $status);
+        return $result;
+    }
+
     public function createOrder($data, $userId)
     {
         $orderModel = new OrderModel();
@@ -89,7 +103,7 @@ class OrderController
     public function getOrderById($orderId)
     {
         $orderModel = new OrderModel();
-        
+
         // checking if user is admin
         if ($_SESSION['user']['admin'] == 't') {
             $order = $orderModel->getOrderById($orderId);
@@ -97,7 +111,7 @@ class OrderController
         }
 
         // checking order exists
-        if (!$orderModel->orderExists($orderId)){
+        if (!$orderModel->orderExists($orderId)) {
             return array(
                 'error' => "Order dosen't exist",
                 'statusCode' => '400'
