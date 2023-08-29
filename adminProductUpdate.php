@@ -21,8 +21,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // get all products
 $product = $productController->getProductById($_GET['id']);
-$product = $product['product'][0];
+if ($product['statusCode'] === '200'){
+    $product = $product['product'][0];
+} else {
+    echo $product['error'];
+    exit();
+}
 ?>
+
+
 
 <div class="bg-gray-100 p-4">
     <div class="  bg-white p-6 rounded shadow-md">

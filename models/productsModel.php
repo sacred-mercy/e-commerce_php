@@ -69,12 +69,27 @@ class ProductModel
     function getProductById($id)
     {
         try {
+            // Ensure $id is safe
             $id = getSafeValue($id);
 
+            // Execute the query using parameterized query
             $product = pg_query_params($GLOBALS['db'], "SELECT * FROM products WHERE id = $1", array($id));
 
+            // Check if the query execution was successful
+            if ($product === false) {
+                throw new Exception("Bad Request.");
+            }
+
+            // Fetch the product data
+            $productData = pg_fetch_all($product);
+
+            // Check if any rows were returned
+            if (empty($productData)) {
+                throw new Exception("Product not found.");
+            }
+
             return array(
-                'product' => pg_fetch_all($product),
+                'product' => $productData,
                 'statusCode' => '200'
             );
         } catch (Exception $e) {
@@ -84,6 +99,7 @@ class ProductModel
             );
         }
     }
+
 
     function updateProduct($data)
     {

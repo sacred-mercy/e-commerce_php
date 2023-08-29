@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <!-- Forget Password link -->
             <div class="mb-4">
-                <a href="/forgotPassword" class="text-blue-500">Forget Password?</a>
+                <a href="forgotPassword.php" class="text-blue-500">Forget Password?</a>
             </div>
 
             <div>
